@@ -71,6 +71,9 @@ class Bot:
                 offset=offset + 1,
                 timeout=self.API_TIMEOUT
             )
+            if not resp:
+                offset += 1
+                continue
 
             for update in resp['result']:
                 offset = max(offset, update['update_id'])
@@ -80,7 +83,10 @@ class Bot:
     def api_call(self, action, **data):
         url = self._api_url(action)
         resp = yield from aiohttp.request('POST', url, data=data)
-        return (yield from resp.json())
+        try:
+            return (yield from resp.json())
+        except ValueError:
+            return
 
     def command(self, regex):
         def decorator(func):
