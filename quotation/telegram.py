@@ -55,15 +55,12 @@ class Bot:
         if 'text' not in message:
             return
         for pattern, handler in self._commands:
-            match = re.search(pattern, message['text'], re.UNICODE)
+            match = re.search(pattern, message['text'])
             if match:
                 return handler(
                     Message(self, **message),
                     **match.groupdict()
                 )
-        print('a regex não bateu')
-        print(message['text'])
-        print(self._commands)
 
     @asyncio.coroutine
     def _check_update_loop(self):
