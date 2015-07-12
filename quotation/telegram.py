@@ -5,6 +5,7 @@ import aiohttp
 import re
 
 import settings
+from utils import logger
 
 
 class Message:
@@ -19,6 +20,10 @@ class Message:
         self.sender = data['from'].get('username', data['from']['first_name'])
 
     def reply(self, text):
+        logger.info(
+            'send reply [{}] to chat [{}]'.format(text, self.chat_id)
+        )
+
         asyncio.async(
             self.bot.api_call(
                 action='sendMessage',
@@ -52,6 +57,8 @@ class Bot:
 
     @asyncio.coroutine
     def _process_message(self, message):
+        logger.debug('process message: {}'.format(message))
+
         if 'text' not in message:
             return
         for pattern, handler in self._commands:
@@ -61,20 +68,21 @@ class Bot:
                     Message(self, **message),
                     **match.groupdict()
                 )
+        logger.warning(
+            'message [{}] dont match any command pattern'.format(message)
+        )
 
     @asyncio.coroutine
     def _check_update_loop(self):
         offset = 0
         while self._running:
+            logger.debug('looking for some update in telegram api')
             resp = yield from self.api_call(
                 'getUpdates',
                 offset=offset + 1,
                 timeout=self.API_TIMEOUT
             )
-            if not resp:
-                offset += 1
-                continue
-
+            logger.info('Update received: {}'.format(resp['result']))
             for update in resp['result']:
                 offset = max(offset, update['update_id'])
                 asyncio.async(self._process_message(update['message']))
@@ -86,7 +94,12 @@ class Bot:
         try:
             return (yield from resp.json())
         except ValueError:
-            return
+            api_return = yield from resp.text()
+            logger.critical(
+                'could not process the return of telegram api: {}'.format(
+                    api_return
+                )
+            )
 
     def command(self, regex):
         def decorator(func):
@@ -95,10 +108,12 @@ class Bot:
         return decorator
 
     def run(self):
+        logger.info('start BOT loop')
         self._running = True
         self.loop.run_until_complete(self._check_update_loop())
 
     def stop(self):
+        logger.info('stop BOT loop')
         self._running = False
         self.loop.close()
 

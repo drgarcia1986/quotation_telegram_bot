@@ -1,1 +1,2 @@
 aiohttp==0.16.5
+Logentries==0.7

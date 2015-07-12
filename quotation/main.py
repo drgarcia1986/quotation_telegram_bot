@@ -4,11 +4,12 @@ import asyncio
 import aiohttp
 from exceptions import InvalidCurrency
 from telegram import bot
-from utils import get_quotation
+from utils import get_quotation, logger
 
 
 @bot.command(r'(/start|/?help)')
 def help_cmd(message, **kwargs):
+    logger.debug('running command help')
     msg = """
 Olá, posso verificar para você a cotação de algumas moedas em relação ao real.
 
@@ -30,13 +31,28 @@ https://github.com/drgarcia1986/quotation_telegram_bot
 
 @bot.command(r'(/cotação|/cotacao) (?P<currency>\w+)')
 def quotation_cmd(message, currency, **kwargs):
+    logger.info('running command quotation for currency: {}'.format(currency))
     try:
         quotation = yield from get_quotation(currency)
         message.reply(
             '$1 {} vale R${}'.format(currency, quotation)
         )
     except InvalidCurrency as e:
+        logger.error('invalid currency: {}'.format(currency))
         message.reply(e.msg)
+
+
+@bot.command(r'(/cotação|/cotacao)')
+def quotation_without_currency_cmd(message, **kwargs):
+    logger.info('running command quotation with currency')
+    msg = """
+Eu preciso que você me informe a moeda que você deseja a cotação,
+por exemplo /cotação dolar
+
+ps: você também pode usar sem a acentuação e o cedinha,
+por exemplo: /cotacao euro
+    """
+    message.reply(msg)
 
 
 if __name__ == '__main__':
