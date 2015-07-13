@@ -62,7 +62,7 @@ class Bot:
         if 'text' not in message:
             return
         for pattern, handler in self._commands:
-            match = re.search(pattern, message['text'])
+            match = re.search(pattern, message['text'], re.UNICODE)
             if match:
                 return handler(
                     Message(self, **message),

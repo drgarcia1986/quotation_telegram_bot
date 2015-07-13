@@ -29,7 +29,7 @@ https://github.com/drgarcia1986/quotation_telegram_bot
     message.reply(msg)
 
 
-@bot.command(r'(/cotação|/cotacao) (?P<currency>\w+)')
+@bot.command(r'/cota\w{2}o (?P<currency>\w+)')
 def quotation_cmd(message, currency, **kwargs):
     logger.info('running command quotation for currency: {}'.format(currency))
     try:
