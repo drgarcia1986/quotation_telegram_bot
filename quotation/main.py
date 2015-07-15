@@ -7,7 +7,7 @@ from telegram import bot
 from utils import get_quotation, logger
 
 
-@bot.command(r'(/start|/?help)')
+@bot.command(r'(/start|/?help|/info)')
 def help_cmd(message, **kwargs):
     logger.debug('running command help')
     msg = """
@@ -42,7 +42,7 @@ def quotation_cmd(message, currency, **kwargs):
         message.reply(e.msg)
 
 
-@bot.command(r'(/cotação|/cotacao)')
+@bot.command(r'/cota\w{2}o')
 def quotation_without_currency_cmd(message, **kwargs):
     logger.info('running command quotation with currency')
     msg = """
