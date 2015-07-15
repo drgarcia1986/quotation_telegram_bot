@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import asyncio
+from functools import partialmethod
 
 import aiohttp
 import re
@@ -25,8 +26,7 @@ class Message:
         )
 
         asyncio.async(
-            self.bot.api_call(
-                action='sendMessage',
+            self.bot.send_message(
                 chat_id=self.chat_id,
                 text=text,
                 disable_web_page_preview='true',
@@ -77,11 +77,12 @@ class Bot:
         offset = 0
         while self._running:
             logger.debug('looking for some update in telegram api')
-            resp = yield from self.api_call(
-                'getUpdates',
+            resp = yield from self.get_updates(
                 offset=offset + 1,
                 timeout=self.API_TIMEOUT
             )
+            if not resp:
+                continue
             logger.info('Update received: {}'.format(resp['result']))
             for update in resp['result']:
                 offset = max(offset, update['update_id'])
@@ -91,15 +92,23 @@ class Bot:
     def api_call(self, action, **data):
         url = self._api_url(action)
         resp = yield from aiohttp.request('POST', url, data=data)
-        try:
+        if resp.status == 200:
             return (yield from resp.json())
-        except ValueError:
+        elif resp.status == 502:  # telegram nginx bad gateway
+            logger.warning(
+                'telegram returns a 502 error from action {}'.format(action)
+            )
+            yield from asyncio.sleep(10)
+        else:
             api_return = yield from resp.text()
             logger.critical(
                 'could not process the return of telegram api: {}'.format(
                     api_return
                 )
             )
+
+    get_updates = partialmethod(api_call, 'getUpdates')
+    send_message = partialmethod(api_call, 'sendMessage')
 
     def command(self, regex):
         def decorator(func):
