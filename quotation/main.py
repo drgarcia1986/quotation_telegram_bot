@@ -49,7 +49,7 @@ def quotation_without_currency_cmd(message, **kwargs):
 Eu preciso que você me informe a moeda que você deseja a cotação,
 por exemplo /cotação dolar
 
-ps: você também pode usar sem a acentuação e o cedinha,
+ps: você também pode usar sem a acentuação e cedilha,
 por exemplo: /cotacao euro
     """
     message.reply(msg)
