@@ -27,7 +27,7 @@ QUOTATIONS = {
     'peso uruguaio': ('http://pesohoje.com/uruguaio/', REGEX_BASE)
 }
 
-QUOTATIONS_LIST = list(QUOTATIONS.keys())
+QUOTATIONS_LIST = sorted(list(QUOTATIONS.keys()))
 
 SUPORTED_QUOTATIONS = (
     ', '.join(QUOTATIONS_LIST[:-1]) + ' e ' + QUOTATIONS_LIST[-1]
