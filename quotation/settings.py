@@ -31,5 +31,5 @@ QUOTATIONS = {
 QUOTATIONS_LIST = list(QUOTATIONS.keys())
 
 SUPORTED_QUOTATIONS = (
-    ' ,'.join(QUOTATIONS_LIST[:-1]) + ' e ' + QUOTATIONS_LIST[-1]
+    ', '.join(QUOTATIONS_LIST[:-1]) + ' e ' + QUOTATIONS_LIST[-1]
 )
