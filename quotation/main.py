@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import asyncio
-
-import aiohttp
 from exceptions import InvalidCurrency
+from settings import SUPORTED_QUOTATIONS
 from telegram import bot
 from utils import get_quotation, logger
 
@@ -14,7 +12,7 @@ def help_cmd(message, **kwargs):
 Olá, posso verificar para você a cotação de algumas moedas em relação ao real.
 
 Atualmente conheço a cotação das seguintes moedas:
-Dolar, Euro e Libra
+{suported_quotations}
 
 Veja um exemplo de como ver a cotação:
 /cotação dolar
@@ -25,11 +23,11 @@ criado por @drgarcia1986
 
 O código fonte está disponivel em:
 https://github.com/drgarcia1986/quotation_telegram_bot
-    """
+    """.format(suported_quotations=SUPORTED_QUOTATIONS)
     message.reply(msg)
 
 
-@bot.command(r'/cota\w{2}o (?P<currency>\w+)')
+@bot.command(r'/cota\w{2}o (?P<currency>.*)')
 def quotation_cmd(message, currency, **kwargs):
     logger.info('running command quotation for currency: {}'.format(currency))
     try:
