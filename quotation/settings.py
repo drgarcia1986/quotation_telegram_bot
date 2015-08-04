@@ -24,7 +24,6 @@ QUOTATIONS = {
     'libra': ('http://librahoje.com/', REGEX_BASE),
     'euro': ('http://eurohoje.com/', REGEX_BASE),
     'peso': ('http://pesohoje.com/', REGEX_BASE),
-    'peso chileno': ('http://pesohoje.com/chileno/', REGEX_BASE),
     'peso uruguaio': ('http://pesohoje.com/uruguaio/', REGEX_BASE)
 }
 
