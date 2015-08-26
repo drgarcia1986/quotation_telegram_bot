@@ -24,7 +24,11 @@ QUOTATIONS = {
     'libra': ('http://librahoje.com/', REGEX_BASE),
     'euro': ('http://eurohoje.com/', REGEX_BASE),
     'peso': ('http://pesohoje.com/', REGEX_BASE),
-    'peso uruguaio': ('http://pesohoje.com/uruguaio/', REGEX_BASE)
+    'peso uruguaio': ('http://pesohoje.com/uruguaio/', REGEX_BASE),
+    'yene': ('http://ienehoje.com/', REGEX_BASE),
+    'iene': ('http://ienehoje.com/', REGEX_BASE),
+    'litecoin': ('http://litecoinhoje.com/', REGEX_BASE),
+    'ouro': ('http://ourohoje.com/', REGEX_BASE)
 }
 
 QUOTATIONS_LIST = sorted(list(QUOTATIONS.keys()))
